@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="gateway-management" />
+        <module name="order-management" />
+        <module name="pay-management" />
+        <module name="room-management" />
+        <module name="security-management" />
+        <module name="user-management" />
+        <module name="yanglao-system" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="item-management" target="1.8" />
+      <module name="order2-management" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

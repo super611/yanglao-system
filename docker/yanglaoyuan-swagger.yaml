@@ -1,0 +1,472 @@
+swagger: "2.0"
+info:
+  title: "养老院管理系统"
+  description: "养老院管理系统的外部接口和微服务接口"
+  version: "0.1"
+
+tags:
+- name: "安全服务"
+  description: "对应于最终用户的系统用例"
+- name: "用户信息服务"
+  description: "为安全服务和其他微服务提供的项目信息管理接口"
+- name: "订单管理服务"
+  description: "为安全服务和其他微服务提供的订单管理接口"
+- name: "客房管理服务"
+  description: "为客房服务和其他微服务提供的客房管理接口"
+schemes:
+- "http"
+- "https"
+
+paths:
+  /api/security/login/{id}/{password}:
+    get:
+      tags:
+      - "安全服务"
+      summary: "验证登录"
+      description: "Multiple status values can be provided with comma separated strings"
+      operationId: "findPetsByStatus"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "status"
+        in: "query"
+        description: "Status values that need to be considered for filter"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "available"
+          - "pending"
+          - "sold"
+          default: "available"
+        collectionFormat: "multi"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Orders"
+        "400":
+          description: "Invalid status value"
+          
+  /api/security/register:
+    post:
+      tags:
+      - "安全服务"
+      summary: "完成用户注册"
+      description: "Returns a single pet"
+      operationId: "getPetById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of pet to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/gateway"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pet not found"
+            
+  /api/users:
+    post:
+      tags:
+      - "用户信息服务"
+      summary: "添加用户信息"
+      description: ""
+      operationId: "placeOrder"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "order placed for purchasing the pet"
+        required: true
+        schema:
+          $ref: "#/definitions/Orders"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Users"
+        "400":
+          description: "请求类型错误"
+  /api/users/empty/{id}:
+    delete:
+      tags:
+      - "用户信息服务务"
+      summary: "删除指定用户信息的服务"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      operationId: "deleteOrder"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the order that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+  /api/users/modify/{id}/{password}:
+    put:
+      tags:
+      - "用户信息服务"
+      summary: "修改用户密码"
+      description: "Returns a map of status codes to quantities"
+      operationId: "getInventory"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of pet to return"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/gateway"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pet not found"
+  /api/users/{id}:
+    get:
+      tags:
+      - "用户信息服务"
+      summary: "通过id方式查询用户信息"
+      description: "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions"
+      operationId: "getItemById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of pet that needs to be fetched"
+        required: true
+        type: "integer"
+        maximum: 10.0
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Users"
+        "400":
+          description: "请求方式无效"
+        "404":
+          description: "请求资源错误"
+      
+  /api/orders:
+    post:
+      tags:
+      - "订单管理服务"
+      summary: "下订单创建初始订单"
+      description: "This can only be done by the logged in user."
+      operationId: "createUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/Orders"
+      responses:
+        default:
+          description: "successful operation"
+  /api/orders/all:
+    get:
+      tags:
+      - "订单管理服务"
+      summary: "查询所有订单"
+      description: ""
+      operationId: "getUserByName"
+      produces:
+      - "application/xml"
+      - "application/json"
+      responses:
+        "200":
+          description: "查询所以订单成功"
+          schema:
+            $ref: "#/definitions/Orders"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+  /api/orders/paid/{id}:
+    put:
+      tags:
+      - "订单管理服务"
+      summary: "订单付款"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/Orders"
+      responses:
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+  /api/orders/close/{id}:
+    put:
+      tags:
+      - "订单管理服务"
+      summary: "关闭订单"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/Orders"
+      responses:
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+  /api/orders/close/{id}:
+    put:
+      tags:
+      - "订单管理服务"
+      summary: "关闭订单"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/Orders"
+      responses:
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+
+  /api/rooms:
+    post:
+      tags:
+      - "客房管理服务"
+      summary: "创建客房"
+      description: "This can only be done by the logged in user."
+      operationId: "createRoom"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/Rooms"
+      responses:
+        default:
+          description: "successful operation"
+  /api/rooms/all:
+    get:
+      tags:
+      - "客房管理服务"
+      summary: "查询所有客房"
+      description: "查询所有客房"
+      operationId: "getRoomById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      responses:
+        "200":
+          description: "查询所有客房成功"
+          schema:
+            $ref: "#/definitions/Rooms"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "网页丢了"
+  /rooms/paid/{id}:
+    put:
+      tags:
+      - "客房管理服务"
+      summary: "客房管理"
+      description: "This can only be done by the logged in user."
+      operationId: "updateRooms"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/Rooms"
+      responses:
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+  /api/orders/close/{id}:
+    put:
+      tags:
+      - "客房管理服务"
+      summary: "客房管理"
+      description: "This can only be done by the logged in user."
+      operationId: "updateRooms"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/Rooms"
+      responses:
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+definitions:
+  security:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+  Orders:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      title:
+        type: "string"
+      price:
+        type: "number"
+        format: "double"
+      deadline:
+        type: "string"
+        format: "date-time"
+      status:
+        type: "string"
+        description: "订单状态"
+        enum:
+        - "created"
+        - "paid"
+        - "expired"
+        - "closed"
+        - "removed"
+    xml:
+      name: "Orders"
+  
+  Users:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      price:
+        type: "number"
+        format: "double"
+        
+  Rooms:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      roomname:
+        type: "string"
+      detail:
+        type: "string"
+      price:
+        type: "number"
+        format: "double"
+      status:
+        type: "string"
+        description: "房间状态"
+        enum:
+        - "CREATED"
+        - "EMPTY"
+        - "LEASED"
+        - "REMOVED"
+      deadline:
+        type: "string"
+        format: "date-time"
+    xml:
+      name: "Rooms"
+        
+
+  

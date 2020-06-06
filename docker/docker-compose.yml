@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+  gateway-service:
+    build: ../gateway-management/docker
+    image: 'yanglao/gateway'
+    container_name: gateway-service
+    ports:
+      - 50000:50000
+    depends_on:
+      - order-service
+      - room-service
+  room-service:
+    build: ../room-management/docker
+    image: 'yanglao/room'
+    container_name: room-service
+    ports:
+      - 53000:53000
+    depends_on:
+      - room-mysql
+  room-service02:
+    build: ../room-management/docker
+    image: 'yanglao/room'
+    container_name: room-service02
+    ports:
+      - 53001:53001
+    depends_on:
+      - room-mysql
+  room-mysql:
+    image: 'mysql:8'
+    container_name: room-mysql
+    ports:
+      - 30000:30000
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: rooms
+    volumes:
+      - ../room-management/docker/schema:/docker-entrypoint-initdb.d
+  order-service:
+    build: ../order-management/docker
+    image: 'yanglao/order'
+    container_name: order-service
+    ports:
+      - 52000:52000
+    depends_on:
+      - order-mysql
+  order-mysql:
+    image: 'mysql:8'
+    container_name: order-mysql
+    ports:
+      - 30001:30001
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: orders
+    volumes:
+      - ../order-management/docker/schema:/docker-entrypoint-initdb.d
+  user-service:
+    build: ../user-management/docker
+    image: 'yanglao/user'
+    container_name: user-service
+    ports:
+      - 51000:51000
+    depends_on:
+      - user-mysql
+  user-mysql:
+    image: 'mysql:8'
+    container_name: user-mysql
+    ports:
+      - 30002:30002
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: users
+    volumes:
+      - ../user-management/docker/schema:/docker-entrypoint-initdb.d
+
+networks:
+  default:
+    external:
+      name: yanglao
+

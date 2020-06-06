@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order
+  labels:
+    app: order
+spec:
+  selector:
+    matchLabels:
+      app: order
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - name: order
+          image: order/image:1
+          imagePullPolicy: Never
+          args: ["--spring.config.location=application.properties"]
+          ports:
+            - containerPort: 51000
+          volumeMounts:
+            - mountPath: /app/application.properties
+              name: order-config
+              subPath: application.properties
+      volumes:
+        - name: order-config
+          configMap:
+            name: order-config
+            items:
+              - key: application.properties
+                path: application.properties
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 51001
+      targetPort: 51000
+  selector:
+    app: order
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-config
+data:
+  application.properties: |
+    spring.datasource.url=jdbc:mysql://order-mysql:30001/orders
+    spring.datasource.username=root
+    spring.datasource.password=root
+    spring.jpa.show-sql=true
+    spring.jpa.hibernate.ddl-auto=update
+    spring.jpa.database=MYSQL
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+    server.port=51000

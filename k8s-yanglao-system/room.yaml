@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: room
+  labels:
+    app: room
+spec:
+  selector:
+    matchLabels:
+      app: room
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: room
+    spec:
+      containers:
+        - name: room
+          image: room/image:1
+          imagePullPolicy: Never
+          args: ["--spring.config.location=application.properties"]
+          ports:
+            - containerPort: 50000
+          volumeMounts:
+            - mountPath: /app/application.properties
+              name: room-config
+              subPath: application.properties
+      volumes:
+        - name: room-config
+          configMap:
+            name: room-config
+            items:
+              - key: application.properties
+                path: application.properties
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: room
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 50001
+      targetPort: 50000
+  selector:
+    app: room
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: room-config
+data:
+  application.properties: |
+    spring.datasource.url=jdbc:mysql://room-mysql:30000/rooms
+    spring.datasource.username=root
+    spring.datasource.password=root
+    spring.jpa.show-sql=true
+    spring.jpa.hibernate.ddl-auto=update
+    spring.jpa.database=MYSQL
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+    server.port=50000

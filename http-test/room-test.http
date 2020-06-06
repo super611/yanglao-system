@@ -1,0 +1,29 @@
+POST http://localhost:50001/api/rooms
+Content-Type: application/json
+
+{
+  "room":"508",
+  "detail":"房间带有一张大床和浴室",
+  "price":"100"
+}
+
+###将房间发布为空闲状态
+PUT http://localhost:50001/api/rooms/empty/726e6dfc-3fae-484e-a521-cef6d0c3a1d7
+
+###将房间发布为预约状态
+PUT http://localhost:50001/api/rooms/reserve/726e6dfc-3fae-484e-a521-cef6d0c3a1d7/1
+
+###将房间发布为已租用状态
+PUT http://localhost:50001/api/rooms/leased/726e6dfc-3fae-484e-a521-cef6d0c3a1d7
+
+###查询所有房间
+GET http://localhost:50001/api/rooms/all
+
+###查询房间的状态
+GET http://localhost:50001/api/rooms/726e6dfc-3fae-484e-a521-cef6d0c3a1d7/status
+
+###将房间发布为暂停租用状态
+PUT http://localhost:50001/api/rooms/removed/726e6dfc-3fae-484e-a521-cef6d0c3a1d7
+
+###
+

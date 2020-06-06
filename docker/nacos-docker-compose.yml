@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  nacos-server:
+    image: nacos/nacos-server
+    container_name: nacos-server-v1
+    environment:
+      MODE: standalone
+    ports:
+      - 8848:8848
+
+networks:
+  default:
+    external:
+      name: yanglao

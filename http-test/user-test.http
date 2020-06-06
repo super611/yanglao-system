@@ -1,0 +1,19 @@
+POST http://localhost:52001/api/users
+Content-Type: application/json
+
+{
+  "password":"dengz",
+  "name":"邓志辉",
+  "phone":"15822828380",
+  "address":"重庆市"
+}
+
+###修改用户
+PUT http://localhost:52001/api/users/modify/1/dengzhihui
+Content-Type: application/json
+
+###按ID查询用户
+GET http://localhost:52001/api/users/1
+
+
+
