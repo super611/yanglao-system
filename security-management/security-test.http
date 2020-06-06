@@ -1,0 +1,19 @@
+POST http://localhost:54000/api/security/register
+Content-Type: application/json
+
+{
+  "password":"1231",
+  "name":"fch",
+  "phone":"15822828380",
+  "address":"天津城建大学"
+}
+
+###登录
+GET http://localhost:54000/api/security/login/10/dengzh
+
+###
+GET http://localhost:52000/api/users/10
+
+###
+
+
