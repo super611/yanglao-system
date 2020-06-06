@@ -1,0 +1,25 @@
+POST http://localhost:51001/api/orders
+Content-Type: application/json
+
+{
+  "userid":"1",
+  "username":"邓志辉",
+  "roomid":"726e6dfc-3fae-484e-a521-cef6d0c3a1d7",
+  "term":"1",
+  "sum":"100"
+}
+
+###付款订单
+PUT http://localhost:51001/api/orders/paid/d507f4e4-ba0b-44e5-817b-4eaf154370a1
+
+###关闭订单
+PUT http://localhost:51001/api/orders/close/d507f4e4-ba0b-44e5-817b-4eaf154370a1
+
+###查询订单的状态
+GET http://localhost:51001/api/orders/d507f4e4-ba0b-44e5-817b-4eaf154370a1/status
+
+###查询所有订单
+GET http://localhost:51001/api/orders/all
+
+###
+
