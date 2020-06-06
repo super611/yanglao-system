@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-config
+data:
+  application.properties: |
+    server.port=51000
+    spring.datasource.url=jdbc:mysql://localhost:30003/users
+    spring.datasource.username=root
+    spring.datasource.password=root
+    spring.jpa.show-sql=true
+    spring.jpa.hibernate.ddl-auto=update
+    spring.jpa.database=MYSQL
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+

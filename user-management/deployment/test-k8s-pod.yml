@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: user-k8s
+  labels:
+    app: user
+spec:
+  containers:
+    - name: user-k8s
+      image: user-management-image:1
+      ports:
+        - containerPort: 51000
+      imagePullPolicy: Never
