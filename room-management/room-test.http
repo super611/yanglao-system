@@ -1,0 +1,29 @@
+POST http://localhost:50000/api/rooms
+Content-Type: application/json
+
+{
+  "room":"208",
+  "detail":"房间带有你好歹好好的好的好好的好的电话浴室",
+  "price":"200"
+}
+
+###将房间发布为空闲状态
+PUT http://localhost:50000/api/rooms/empty/726e6dfc-3fae-484e-a521-cef6d0c3a1d7
+
+###将房间发布为预约状态
+PUT http://localhost:50000/api/rooms/reserve/726e6dfc-3fae-484e-a521-cef6d0c3a1d7/1
+
+###将房间发布为已租用状态
+PUT http://localhost:50000/api/rooms/leased/726e6dfc-3fae-484e-a521-cef6d0c3a1d7
+
+###查询所有房间
+GET http://localhost:50000/api/rooms/all
+
+###查询房间的状态
+GET http://localhost:50000/api/rooms/b32154fc-1b54-4316-8338-a811146c2456/status
+
+###将房间发布为暂停租用状态
+PUT http://localhost:50000/api/rooms/removed/726e6dfc-3fae-484e-a521-cef6d0c3a1d7
+
+###
+
