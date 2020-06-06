@@ -1,0 +1,28 @@
+POST http://localhost:53000/api/gateway/rooms/getAll
+Content-Type: application/json
+
+{
+  "title": "assignment title from api gateway",
+  "description": "assignment description from gateway",
+  "deadline": "2020-04-30 08:32:23"
+}
+
+###
+GET http://localhost:19999/api/assignments/{{assignmentId}}/status
+
+###
+PUT http://localhost:19999/api/assignments/publish/{{assignmentId}}
+
+###
+POST http://localhost:19999/api/submissions
+Content-Type: application/json
+
+{
+  "code": "printf('hello world');",
+  "assignment": "{{assignmentId}}"
+}
+
+###
+GET http://localhost:51000/it
+
+###
